@@ -1,28 +1,83 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 
+// We need to install redux:
+// npm install redux --save
+
+// We need to install react-redux:
+// npm install react-redux --save
+
+// We need to build a store
+// To build a store we need a state and a reducer
+
+// So we usually build a reducer first!
+
+import { connect } from 'react-redux';
+
 class App extends Component {
+
+  // constructor(props) {
+  //   super(props);
+  //   this.state = {
+  //     age: 21,
+  //   }
+  // }
+
+  // onAgeUpHandle = () => {
+  //   this.setState({
+  //     ...this.state,
+  //     age: ++this.state.age
+  //   });
+  // }
+  // onAgeDownHandle = () => {
+  //   this.setState({
+  //     ...this.state,
+  //     age: --this.state.age
+  //   });
+  // }
+
+
+  test = (parametre) => {
+    console.log(parametre)
+  }
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+        <div>Age: <span>{this.props.age}</span></div>
+        <button onClick={this.props.onAgeUpHandle}>Age UP</button>
+        <button onClick={this.props.onAgeDownHandle}>Age DOWN</button>
+        <hr />
+        <div>History:</div>
+        <ul>
+          {
+            this.props.history.map((el) => (
+              <li key={el.id} onClick={() => this.props.onClickHandle(el.id)}>
+                {el.age}
+              </li>
+            ))
+          }
+          {console.log(this.props.history)}
+        </ul>
+      </div >
     );
   }
 }
 
-export default App;
+const mapStateToProps = (state) => {
+  return {
+    age: state.age,
+    history: state.history,
+    id: state.history.id,
+
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onAgeUpHandle: () => dispatch({ type: 'AGE_UP', payload: 1 }),
+    onAgeDownHandle: () => dispatch({ type: 'AGE_DOWN', payload: -1 }),
+    onClickHandle: (id) => dispatch({ type: 'DEL_ITEM', key: id })
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
